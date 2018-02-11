@@ -1,0 +1,590 @@
+
+
+;; 2016-11-24
+;; This is the master version of my config file in org mode, following Zamansky
+
+* Interface tweaks
+  #+BEGIN_SRC  emacs-lisp
+  ;; 2014-11-24
+  ;; Source Steve Yegge as above  (also partial ref in Zamansky 3)
+  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  ;;;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+  (fset 'yes-or-no-p 'y-or-n-p)
+  ;; (global-set-key (kbd "<f5>") 'revert-buffer)
+
+  ;;; Zamansky 1
+  (setq inhibit-startup-message t)
+  #+END_SRC
+
+  Including this is suggested for playing with a new package, to familiarize
+  #+BEGIN_SRC
+  ;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+  #+END_SRC
+
+* Yegge and more
+
+  This all seems so simple
+  http://stackoverflow.com/questions/18391445/evaluating-elisp-in-emacs
+
+  #+BEGIN_SRC emacs-lisp
+  ;; (setq debug-on-error t)
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+
+  ;; 2014-11-24
+  ;; These are from http://www.emacswiki.org/emacs/EmacsForMacOS#toc26
+  ;; I reset caps lock in preferences (at least for now)
+  ;; key bindings (NOTE: probably superceded by what follows from Yegge)
+  ;;(when (eq system-type 'darwin) ;; mac specific settings
+  ;;  (setq mac-option-modifier 'alt)
+  ;;  (setq mac-command-modifier 'meta)
+  ;;  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  ;;  )
+
+  ;; 2014-11-24
+  ;; Source Steve Yegge https://sites.google.com/site/steveyegge2/effective-emacs
+  ;; (global-set-key "\C-x\C-m" 'execute-extended-command)
+  ;; (global-set-key "\C-c\C-m" 'execute-extended-command)
+  #+END_SRC
+
+
+* try a package
+
+  Zamansky 1
+  #+BEGIN_SRC emacs-lisp
+  (use-package try
+  	:ensure t)
+  #+END_SRC
+
+* which key information / choices
+
+  Zamansky 1
+  #+BEGIN_SRC emacs-lisp
+  (use-package which-key
+  	:ensure t
+  	:config
+  	(which-key-mode))
+  #+END_SRC
+
+
+
+* Bullets in org mode
+
+  Zamansky 2
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  #+END_SRC
+
+* orphan code
+  #+BEGIN_SRC emacs-lisp
+  ;; (eval-when-compile
+  ;;  (require 'use-package))
+  ;; (require 'diminish)
+  ;; (require 'bind-key)
+  #+END_SRC
+
+* ido mode
+
+  Built in (got this stuff from Zamansky 4)
+  This is a good place to look for the basic commands
+  https://masteringemacs.org/article/introduction-to-ido-mode
+
+** ido commands I have tried
+   - C-d to get a dired buffer
+   - C-f to get vanilla find-file
+   - M-m to create a new directory
+   - M-n/M-p in files, to cycle through directories
+   - M-k does not seem to work
+
+
+  #+BEGIN_SRC emacs-lisp
+;  (setq ido-enable-flex-matching t)
+;  (setq ido-everywhere t)
+;  (ido-mode 1)
+  #+END_SRC
+
+  Better display of buffer info
+  #+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer) ; make ibuffer default
+  #+END_SRC
+
+  Tabber, really just experimental
+  http://stackoverflow.com/questions/3811126/do-you-use-emacs-tabbar
+  Basically there are better ways of doing things
+#  #+BEGIN_SRC emacs-lisp
+  (use-package tabbar
+    :ensure t
+    :config (tabbar-mode 1)
+    )
+#  #+END_SRC
+
+
+* navigating between windows
+
+  This seems really useful; gives windows numbers to help navigation
+  #+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :init
+    (progn
+      (global-set-key [remap other-window] 'ace-window)
+      (custom-set-faces
+       '(aw-leading-char-face
+         ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+      ))
+  #+END_SRC
+
+* zamansky 7-11
+
+** z 6
+   ; This one is about swiper mode which I don't really like
+
+** z 7
+   ; This one is about ivy which does not look very interesting right now
+
+** z 8
+   ; This one is about autocomplete and company modes
+   ; Seems to try to autocomplete on the basis of words available
+   ; Makes more sense when we get more specific perhaps
+
+** z 9
+   ; themes in case I want to change
+   ; Themes can be handy for distinguishing different windows
+
+   #+BEGIN_SRC emacs-lisp
+
+   ;(use-package zenburn-theme
+   ;  :ensure t
+   ;  :config (load-theme 'zenburn t))
+   ;
+   ;(load-theme 'leuven t)
+   #+END_SRC
+
+* emacs 25.1 mystery
+  #+BEGIN_SRC emacs-lisp
+  ;; with emacs 25.1 I need this get get gpg to work on Mac
+  (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+  (setq exec-path (append exec-path '("/usr/local/bin")))
+
+  (setf epa-pinentry-mode 'loopback)
+  #+END_SRC
+
+* my path
+  #+BEGIN_SRC emacs-lisp
+  ;; Reasonable enough to expect this
+  (if (concat (getenv "HOME") "/libemacs")
+      (add-to-list 'load-path (concat (getenv "HOME") "/libemacs/")))
+  #+END_SRC
+
+
+* git (redundant, kept in case needed)
+  #+BEGIN_SRC emacs-lisp
+  ;; 2014-11-25
+  ;; Git  http://www.emacswiki.org/emacs/Git
+  ;; (require 'git)
+  #+END_SRC
+
+* magit, the future
+  #+BEGIN_SRC emacs-lisp
+  ;; 2016-05-15
+  ;; https://magit.vc/manual/magit/index.html#Top
+  ;; https://www.youtube.com/watch?v=vQO7F2Q9DwA
+  (use-package magit
+    :ensure t
+    :init
+    (global-set-key (kbd "C-x g" ) 'magit-status))
+  #+END_SRC
+
+* work with real lines, not visual lines
+  ;; 2015-11-09
+  #+BEGIN_SRC emacs-lisp
+  (setq line-move-visual nil)
+  #+END_SRC
+
+* make scripts executable
+  ;; 2015-05-06
+  ;; To automatically add execution permissions to a script
+  ;; http://emacswiki.org/emacs/MakingScriptsExecutableOnSave
+  #+BEGIN_SRC emacs-lisp
+  (add-hook 'after-save-hook
+          #'(lambda ()
+          (and (save-excursion
+                 (save-restriction
+                   (widen)
+                   (goto-char (point-min))
+                   (save-match-data
+                     (looking-at "^#!"))))
+               (not (file-executable-p buffer-file-name))
+               (shell-command (concat "chmod u+x " "\"" buffer-file-name "\""))
+               (message
+                (concat "Saved as script: " buffer-file-name)))))
+  #+END_SRC
+
+* tidy whitespace
+
+  Was problematic at one point, try again, maybe limit modes that use it
+  #+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (setq delete-trailing-lines t)
+  #+END_SRC
+
+* deft
+  #+BEGIN_SRC emacs-lisp
+  ;;;
+  ;;; http://jblevins.org/projects/deft/
+  ;;;
+  (use-package deft
+    :ensure t)
+
+  (when (require 'deft nil 'noerror)
+     (setq
+        deft-extension "org"
+        deft-directory "~/notes/"
+        deft-text-mode 'org-mode
+        deft-recursive t)
+     (global-set-key (kbd "<f9>") 'deft))
+  #+END_SRC
+
+* these don't have to come together
+  Still some work to do here
+  #+BEGIN_SRC emacs-lisp
+  (server-start)
+  (require 'org-protocol)
+  #+END_SRC
+
+* elpy jedi yas
+
+  Ran into problems
+  This was the solution
+  https://github.com/tkf/emacs-jedi/issues/87
+  http://docs.python-guide.org/en/latest/dev/virtualenvs/
+
+  Original documentation
+  ;; https://github.com/jorgenschaefer/elpy/wiki/Installation
+  #+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :ensure t
+    :config
+    (elpy-enable))
+
+  (use-package jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'jedi:setup)
+    (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+  (use-package yasnippet
+    :ensure t
+    :init
+      (yas-global-mode 1))
+
+  (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+  (define-key global-map (kbd "C-c o") 'iedit-mode)
+  #+END_SRC
+
+* alternative to elpy
+  sudo pip install pylint
+  sudo pip install virtualenv
+
+  This from Zamansky
+  I commented it out since I have elpy, but it might be useful later
+  #+BEGIN_SRC emacs-lisp
+  ;; (use-package flycheck
+  ;;   :ensure t
+  ;;   :init
+  ;;   (global-flycheck-mode t))
+  ;;
+  ;; (use-package jedi
+  ;;   :ensure t
+  ;;   :init
+  ;;   (add-hook 'python-mode-hook 'jedi:setup)
+  ;;   (add-hook 'python-mode-hook 'jedi:ac-setup))
+  #+END_SRC
+
+  
+* babel-related stuff
+
+  It maybe that this setup information is no longer needed with emacs25
+  #+BEGIN_SRC emacs-lisp
+  ;;; 2016-07-19 This stops interpretation on desktop
+  ;;;;;(org-babel-do-load-languages
+  ;;;;; 'org-babel-load-languages
+  ;;;;; '((shell . t)
+  ;;;;;   (ditaa .t)
+  ;;;;;   (emacs-lisp . nil)
+  ;;;;;   (python . t)
+  ;;;;;   (gnuplot . t)
+  ;;;;;   ))
+  #+END_SRC
+
+
+* re-splitting window
+  #+BEGIN_SRC emacs-lisp
+  ;;;;;;;;;;;;;;;;;; splitting windows
+  ;;; do a google search for "emacs toggle split window horizontal vertical"
+
+  ;;; temporary (there is a nice function to toggle somewhere out there
+  ;;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+  (setq split-height-threshold nil)
+  (setq split-width-threshold 0)
+
+  ;; wow, quite complicated
+  ;; http://emacs.stackexchange.com/questions/318/switch-window-split-orientation-fastest-way
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+
+  ;; maybe this is better
+  ;; https://www.emacswiki.org/emacs/ToggleWindowSplit
+  (defun toggle-frame-split ()
+    "If the frame is split vertically, split it horizontally or vice versa.
+  Assumes that the frame is only split into two."
+    (interactive)
+    (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
+    (let ((split-vertically-p (window-combined-p)))
+      (delete-window) ; closes current window
+      (if split-vertically-p
+          (split-window-horizontally)
+        (split-window-vertically)) ; gives us a split with the other window twice
+      (switch-to-buffer nil))) ; restore the original window in this part of the frame
+
+  ;; I don't use the default binding of 'C-x 5', so use toggle-frame-split instead
+  (global-set-key (kbd "C-x 5") 'toggle-frame-split)
+  #+END_SRC
+
+
+
+
+  #+BEGIN_SRC emacs-lisp
+  ;; MultiTerm
+
+;;  (require 'multi-term)
+;;  (setq multi-term-program "/bin/bash")
+  #+END_SRC
+
+
+
+* Tramp mode
+  ;; https://www.emacswiki.org/emacs/TrampMode
+  #+BEGIN_SRC  emacs-lisp
+  (setq tramp-default-method "ssh")
+  #+END_SRC
+
+* Ditaa
+    #+BEGIN_SRC  emacs-lisp
+  (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+  (setq org-ditaa-jar-path "~/root/projects/ditaa/ditaa0_9/ditaa0_9.jar")
+
+  (defun bh/display-inline-images ()
+    (condition-case nil
+        (org-display-inline-images)
+      (error nil)))
+  #+END_SRC
+
+* hilight the current line
+
+  I quite like this
+  #+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode t)
+  #+END_SRC
+
+* for publishing in org mode - Reveal.js
+  This is basically Zamansky 11
+  http://cestlaz.github.io/posts/using-emacs-11-reveal/#.WDdsAIgzxFI
+  #+BEGIN_SRC emacs-lisp
+;;  (use-package ox-reveal
+;;    :ensure ox-reveal)
+;;
+;;  (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+;;  (setq org-reveal-mathjax t)
+
+  (use-package htmlize
+    :ensure t)
+  #+END_SRC
+* Undo mode
+  This new stuff is for really complicated undos
+
+  Basic emacs has undo, bound to C-/ or C-_ but that's about it.
+
+  The other, is the visual undo tree. You can bring that up wit C-x u
+
+  Once you bring up the undo tree, you can use the up and down arrows or
+  C-n and C-p to move between undo and redos. When you get to what you
+  want, just quit the undo tree visualizer with q.
+  #+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+  :ensure t
+  :init
+    (global-undo-tree-mode))
+  #+END_SRC
+
+* Hungry delete mode
+  Zamansky
+  Experiment
+  #+BEGIN_SRC
+  ; deletes all the whitespace when you hit backspace or delete
+  (use-package hungry-delete
+  :ensure t
+  :config
+    (global-hungry-delete-mode))
+  #+END_SRC
+
+* Expand region
+  Zamansky
+  Experiment
+  #+BEGIN_SRC
+  ; expand the marked region in semantic increments (negative prefix to reduce region)
+  (use-package expand-region
+  :ensure t
+  :config
+    (global-set-key (kbd "C-=") 'er/expand-region))
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+  ;;(global-auto-revert-mode 1) ;; you might not want this
+  ;;(setq auto-revert-verbose nil) ;; or this
+  ;;(global-set-key (kbd "<f5>") 'revert-buffer)   ;;; repeat!!!
+  #+END_SRC
+
+* Simplified narrowing
+
+  Circle back and try this at some point -- placeholer
+  http://endlessparentheses.com/emacs-narrow-or-widen-dwim.html
+
+  #+BEGIN_SRC emacs-lisp
+  ; mark and edit all copies of the marked region simultaniously.
+  (use-package iedit
+  :ensure t)
+
+  ; if you're windened, narrow to the region, if you're narrowed, widen
+  ; bound to C-x n
+  (defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+  Intelligently means: region, org-src-block, org-subtree, or defun,
+  whichever applies first.
+  Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+  With prefix P, don't widen, just narrow even if buffer is already
+  narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+  ((region-active-p)
+  (narrow-to-region (region-beginning) (region-end)))
+  ((derived-mode-p 'org-mode)
+  ;; `org-edit-src-code' is not a real narrowing command.
+  ;; Remove this first conditional if you don't want it.
+  (cond ((ignore-errors (org-edit-src-code))
+  (delete-other-windows))
+  ((org-at-block-p)
+  (org-narrow-to-block))
+  (t (org-narrow-to-subtree))))
+  (t (narrow-to-defun))))
+
+  ;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
+  ;; This line actually replaces Emacs' entire narrowing keymap, that's
+  ;; how much I like this command. Only copy it if that's what you want.
+  (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+  #+END_SRC
+
+* yanking
+
+  From Zamansky via this
+  http://pragmaticemacs.com/emacs/counsel-yank-pop-with-a-tweak/
+  #+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :bind
+    (("M-y" . counsel-yank-pop)
+     :map ivy-minibuffer-map
+     ("M-y" . ivy-next-line)))
+  #+END_SRC
+
+* ivy
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :ensure t
+    :diminish (ivy-mode)
+    :bind (("C-x b" . ivy-switch-buffer))
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-display-style 'fancy))
+  #+END_SRC
+
+* projectile
+
+  #+BEGIN_SRC emacs-lisp
+  ;; projectile
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-global-mode)
+    (setq projectile-completion-system 'ivy))
+
+;;  (use-package counsel-projectile
+;;    :ensure t
+;;    :config
+;;    (counsel-projectile-on))
+  #+END_SRC
+
+* better clipboard interaction
+
+  ;; Save whatever’s in the current (system) clipboard before
+  ;; replacing it with the Emacs’ text.
+  ;; https://github.com/dakrone/eos/blob/master/eos.org
+  #+BEGIN_SRC emacs-lisp
+  (setq save-interprogram-paste-before-kill t)
+  #+END_SRC
+
+<* web mode
+  Documentation: http://web-mode.org
+  #+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+	 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+	 (setq web-mode-engines-alist
+	       '(("django"    . "\\.html\\'")))
+	 (setq web-mode-ac-sources-alist
+	       '(("css" . (ac-source-css-property))
+		 ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+  (setq web-mode-enable-auto-closing t))
+  (setq web-mode-enable-auto-quoting t) ; this fixes the quote problem I mentioned
+  #+END_SRC
+
+* Showing vc status on the modeline
+
+  This was referred to here, let's try it
+  https://www.reddit.com/r/emacs/comments/5eoe4w/modeline_doesnt_update_git_branch_when_i_checkout/
+  #+BEGIN_SRC emacs-lisp
+  (setq auto-revert-check-vc-info t)
+  #+END_SRC
