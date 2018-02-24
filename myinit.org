@@ -229,9 +229,16 @@
 * tidy whitespace
 
   Was problematic at one point, try again, maybe limit modes that use it
+  There was a nasty interaction with org-mode that would do a save every second
+  Also I only want it to work with programming modes
+  I found this
+  https://stackoverflow.com/questions/19174302/emacs-only-delete-trailing-whitespace-while-saving-in-programming-mode
   #+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  (setq delete-trailing-lines t)
+  (add-hook 'before-save-hook 'my-prog-nuke-trailing-whitespace)
+
+  (defun my-prog-nuke-trailing-whitespace ()
+    (when (derived-mode-p 'prog-mode)
+      (delete-trailing-whitespace)))
   #+END_SRC
 
 * deft
@@ -307,7 +314,7 @@
   ;;   (add-hook 'python-mode-hook 'jedi:ac-setup))
   #+END_SRC
 
-  
+
 * babel-related stuff
 
   It maybe that this setup information is no longer needed with emacs25
