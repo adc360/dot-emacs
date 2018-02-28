@@ -49,6 +49,28 @@
   ;; (global-set-key "\C-c\C-m" 'execute-extended-command)
   #+END_SRC
 
+  This seems like a workable approach
+  https://apple.stackexchange.com/questions/12087/emacs-on-mac-os-x-to-alt-or-command
+  It's probably not going to work in terminal or iTerm2
+  #+BEGIN_SRC EMACS-LISP
+  ;; check OS type
+  (cond
+   ((string-equal system-type "windows-nt") ; Microsoft Windows
+    (progn
+     (message "Microsoft Windows")))
+   ((string-equal system-type "darwin") ; Mac OS X
+    (progn
+     (setq mac-option-key-is-meta nil)
+     (setq mac-command-key-is-meta t)
+     (setq mac-command-modifier 'meta)
+     (setq mac-option-modifier nil)
+     (message "Mac OS X")))
+   ((string-equal system-type "gnu/linux") ; linux
+    (progn
+     (message "Linux"))))
+
+  #+END_SRC
+
 
 * try a package
 
@@ -307,7 +329,7 @@
   ;;   (add-hook 'python-mode-hook 'jedi:ac-setup))
   #+END_SRC
 
-  
+
 * babel-related stuff
 
   It maybe that this setup information is no longer needed with emacs25
